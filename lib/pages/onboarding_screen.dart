@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pulze/pages/login_page.dart';
+import 'package:Adda/pages/login_page.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({ Key? key}) : super(key: key);

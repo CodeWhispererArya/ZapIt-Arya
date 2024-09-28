@@ -1,9 +1,8 @@
 // sign_up_screen.dart
+import 'dart:convert';
+import 'package:Adda/pages/contact_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-import 'package:pulze/pages/contact_screen.dart'; // Add this import statement for jsonEncode
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -14,18 +13,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   String _email = '';
   String _password = '';
-  String _confirmPassword = '';
 
   Future<void> _signUp() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // Check if password and confirm password match
-      if (_password != _confirmPassword) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Passwords do not match')),
-        );
-        return;
-      }
       // Call backend API to sign up
       final response = await http.post(
         Uri.parse('https://your-backend-api.com/sign-up'),
@@ -40,9 +31,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       if (response.statusCode == 200) {
         // Sign up successful, navigate to contact screen
-        Navigator.pushReplacement(
+        await Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => ContactScreen()),
+          MaterialPageRoute(builder: (context) => ContactScreen(getContacts: () {  },)),
         );
       } else {
         // Sign up failed, show error message
@@ -88,25 +79,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   }
                   return null;
                 },
-                onSaved: (value) => _password = value!,
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Confirm Password',
-                ),
-                obscureText: true,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a confirm password';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _confirmPassword = value!,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                child: Text('Sign up'),
-                onPressed: _signUp,
+                onSaved: (value) => _password = value!, // Add this line
               ),
             ],
           ),
