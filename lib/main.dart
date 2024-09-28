@@ -1,7 +1,7 @@
 // main.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:pulze/pages/splash_screen.dart';
+import 'package:Adda/pages/splash_screen.dart';
 import './pages/theme_provider.dart';
 import './pages/app_theme.dart'; // Import the AppTheme class
 import 'package:flutter_contacts/flutter_contacts.dart';

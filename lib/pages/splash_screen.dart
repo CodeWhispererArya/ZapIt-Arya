@@ -1,7 +1,7 @@
+import 'package:Adda/pages/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart'; // Correct import statement
-import 'package:pulze/pages/onboarding_screen.dart';
 import './theme_provider.dart';
 
 class SplashScreen extends StatefulWidget {
