@@ -1,27 +1,52 @@
-// ignore_for_file: unused_field
-
+// login_screen.dart
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
-
+class LoginScreen extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  String _email = ''; // Initialize with an empty string
-  String _password = ''; // Initialize with an empty string
+  String _email = '';
+  String _password = '';
+
+  Future<void> _login() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      // Call backend API to login
+      final response = await http.post(
+        Uri.parse('http://localhost:8080/login'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': _email,
+          'password': _password,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Login successful, navigate to contact screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => ContactScreen()),
+        );
+      } else {
+        // Login failed, show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Invalid email or password')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Login',
-          style: Theme.of(context).textTheme.titleLarge, // titleLarge is valid
-        ),
+        title: Text('Login'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -32,7 +57,6 @@ class _LoginPageState extends State<LoginPage> {
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  labelStyle: Theme.of(context).textTheme.bodyLarge, // Changed to bodyText1
                 ),
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -45,7 +69,6 @@ class _LoginPageState extends State<LoginPage> {
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  labelStyle: Theme.of(context).textTheme.bodyLarge, // Changed to bodyText1
                 ),
                 obscureText: true,
                 validator: (value) {
@@ -58,16 +81,16 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                child: Text(
-                  'Login',
-                  style: Theme.of(context).textTheme.button, // Changed to button
-                ),
+                child: Text('Login'),
+                onPressed: _login,
+              ),
+              TextButton(
+                child: Text('Don\'t have an account? Sign up'),
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    // TODO: Implement login logic here
-                    print('Login successful!');
-                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignUpScreen()),
+                  );
                 },
               ),
             ],
@@ -76,8 +99,4 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-}
-
-extension on TextTheme {
-  get button => null;
 }

@@ -1,32 +1,53 @@
-// ignore_for_file: unused_field
-
+// sign_up_screen.dart
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
-
+class SignUpScreen extends StatefulWidget {
   @override
-  _SignupPageState createState() => _SignupPageState();
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-
-class _SignupPageState extends State<SignupPage> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
-  String _email = ''; // Initialize with an empty string
-  String _password = ''; // Initialize with an empty string
-  String _confirmPassword = ''; // Initialize with an empty string
+  String _email = '';
+  String _password = '';
+  String _confirmPassword = '';
 
-  // Rest of your code...
+  Future<void> _signUp() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      // Call backend API to sign up
+      final response = await http.post(
+        Uri.parse('https://your-backend-api.com/sign-up'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': _email,
+          'password': _password,
+        }),
+      );
 
+      if (response.statusCode == 200) {
+        // Sign up successful, navigate to contact screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => ContactScreen()),
+        );
+      } else {
+        // Sign up failed, show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Sign up failed')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Sign up',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
+        title: Text('Sign up'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -37,7 +58,6 @@ class _SignupPageState extends State<SignupPage> {
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  labelStyle: Theme.of(context).textTheme.bodyLarge, // Changed to bodyText1
                 ),
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -45,12 +65,17 @@ class _SignupPageState extends State<SignupPage> {
                   }
                   return null;
                 },
+                onSaved: (value) => _email = value!,
               ),
-              // Rest of your code...
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                ),
+                obscureText: true,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter a password';
+                  }
+                  return null;
+                },
+               
