@@ -1,20 +1,37 @@
+// main.dart
 import 'package:flutter/material.dart';
-import './pages/splash_screen.dart';
-import './pages/theme.dart'; // New file for theme definitions
+import 'package:provider/provider.dart';
+import 'package:pulze/pages/splash_screen.dart';
+import './pages/theme_provider.dart';
+import './pages/app_theme.dart'; // Import the AppTheme class
+import 'package:flutter_contacts/flutter_contacts.dart';
 
-void main() {
-  runApp(MyApp());
+Future<List<Contact>> getContacts() async {
+  return await FlutterContacts.getContacts(withThumbnail: false);
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FlutterContacts.requestPermission();
+  runApp(
+    ChangeNotifierProvider<ThemeProvider>(
+      create: (_) => ThemeProvider(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ZAP',
-      theme: AppTheme.lightTheme, // Use the light theme by default
-      home: SplashScreen(),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          title: 'PUlze',
+          theme: themeProvider.isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme,
+          home: SplashScreen(),
+        );
+      },
     );
   }
 }

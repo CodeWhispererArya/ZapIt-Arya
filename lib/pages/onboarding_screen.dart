@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './authentication_screen.dart';
+import 'package:pulze/pages/login_page.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({ Key? key}) : super(key: key);
@@ -77,7 +77,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       // Navigate to authentication screen
                       Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => AuthenticationScreen()),
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
                       );
                     }
                   },

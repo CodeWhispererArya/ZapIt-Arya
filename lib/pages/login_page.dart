@@ -1,27 +1,65 @@
-// ignore_for_file: unused_field
-
+// login_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+import 'package:pulze/pages/contact_screen.dart';
+import 'package:pulze/pages/signup_page.dart'; // Add this import statement for jsonEncode
 
+class LoginScreen extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  String _email = ''; // Initialize with an empty string
-  String _password = ''; // Initialize with an empty string
+  String _email = '';
+  String _password = '';
+
+  Future<void> _login() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      // Call backend API to login
+      final response = await http.post(
+        Uri.parse('https://120.0.0.1:5000/api/login'), // Add API endpoint
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': _email,
+          'password': _password,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Login successful, navigate to contact screen
+        await Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => ContactScreen(getContacts: _getContacts)), // Pass a function that retrieves contacts
+        );
+      } else {
+        // Login failed, show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Invalid email or password')),
+        );
+      }
+    }
+  }
+
+  // Define the _getContacts function
+  Future<List<Contact>> _getContacts() async {
+    // Implement your logic to retrieve contacts from the backend API or local database
+    // Return a list of contacts
+    // For demonstration purposes, return an empty list
+    return Future.value([]);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Login',
-          style: Theme.of(context).textTheme.titleLarge, // titleLarge is valid
-        ),
+        title: Text('Login'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -32,7 +70,6 @@ class _LoginPageState extends State<LoginPage> {
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  labelStyle: Theme.of(context).textTheme.bodyLarge, // Changed to bodyText1
                 ),
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -45,7 +82,6 @@ class _LoginPageState extends State<LoginPage> {
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  labelStyle: Theme.of(context).textTheme.bodyLarge, // Changed to bodyText1
                 ),
                 obscureText: true,
                 validator: (value) {
@@ -58,26 +94,22 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                child: Text(
-                  'Login',
-                  style: Theme.of(context).textTheme.button, // Changed to button
-                ),
+                child: Text('Login'),
+                onPressed: _login,
+              ),
+              TextButton(
+                child: Text('Don\'t have an account? Sign up'),
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    // TODO: Implement login logic here
-                    print('Login successful!');
-                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignUpScreen()),
+                  );
                 },
               ),
             ],
           ),
         ),
-      ),
+      )
     );
   }
-}
-
-extension on TextTheme {
-  get button => null;
 }
