@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
       try {
         // Call backend API to login
         final response = await http.post(
-          Uri.parse(  'http://covertocover.tech/users/login?username=<username>&passw=<password>'), // Add API endpoint
+          Uri.parse(  'http://covertocover.tech/users/login'), // Add API endpoint
           headers: {
             'Content-Type': 'application/json',
           },

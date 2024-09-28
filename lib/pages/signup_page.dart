@@ -14,12 +14,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _email = '';
   String _password = '';
 
+  // ignore: unused_element
   Future<void> _signUp() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       // Call backend API to sign up
       final response = await http.post(
-        Uri.parse('https://your-backend-api.com/sign-up'),
+        Uri.parse('http://covertocover.tech/users/sign-up'),
         headers: {
           'Content-Type': 'application/json',
         },
