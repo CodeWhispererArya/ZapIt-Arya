@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
         return MaterialApp(
-          title: 'PUlze',
+          title: 'Adda',
           theme: themeProvider.isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme,
           home: SplashScreen(),
         );

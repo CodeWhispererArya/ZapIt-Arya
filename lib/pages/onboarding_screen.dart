@@ -26,19 +26,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             },
             children: [
               OnboardingPage(
-                title: 'Welcome to Pulze',
-                subtitle: 'Your fitness journey starts here',
-                image: 'assets/onboarding1.png',
-              ),
-              OnboardingPage(
-                title: 'Track Your Progress',
-                subtitle: 'Monitor your workouts and stay motivated',
-                image: 'assets/onboarding2.png',
+                title: 'Welcome to Adda',
+                subtitle: 'Let’s connect in vibrant Adda!', 
+                image: '',
+                // 
               ),
               OnboardingPage(
                 title: 'Get Started',
-                subtitle: 'Create an account to begin your fitness journey',
-                image: 'assets/onboarding3.png',
+                subtitle: 'Join for a Amazing chatting Experience ',
+                image: '',
               ),
             ],
           ),
