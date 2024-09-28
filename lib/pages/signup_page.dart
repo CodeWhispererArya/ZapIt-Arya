@@ -1,5 +1,6 @@
 // sign_up_screen.dart
 import 'dart:convert';
+import 'package:Adda/main.dart';
 import 'package:Adda/pages/contact_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -34,7 +35,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         // Sign up successful, navigate to contact screen
         await Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => ContactScreen(getContacts: () {  },)),
+          MaterialPageRoute(builder: (context) => ContactScreen(getContacts: getContacts)),
         );
       } else {
         // Sign up failed, show error message
